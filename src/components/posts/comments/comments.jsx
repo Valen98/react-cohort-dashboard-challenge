@@ -4,9 +4,27 @@ import ProfileIcon from "../../profileIcon/ProfileIcon";
 import InputField from "../../inputFields/InputFields";
 import { Button } from "@mui/material";
 
-export default function Comments({ postId }) {
+export default function Comments({ postId, currentUser }) {
   const [comments, setComments] = useState([]);
   const [commentInput, setCommentInput] = useState("");
+  const [filteredComments, setFilteredComments] = useState([]);
+  const [checkFilter, setCheckFilter] = useState(false);
+
+  const filterComment = () => {
+    if (checkFilter) {
+      if (comments.length > 3) {
+        setFilteredComments(
+          comments.slice(comments.length - 3, comments.length)
+        );
+        console.log(filteredComments);
+        setCheckFilter(!checkFilter);
+      }
+    } else {
+      setFilteredComments([...comments]);
+      setCheckFilter(!checkFilter);
+      console.log(filteredComments);
+    }
+  };
 
   useEffect(() => {
     fetch(
@@ -15,6 +33,12 @@ export default function Comments({ postId }) {
       .then((res) => res.json())
       .then((data) => {
         setComments(data);
+        if(data.length > 3) {
+          setFilteredComments(data.slice(data.length - 3, data.length));
+        }else {
+          setFilteredComments(data)
+        }
+        
       });
   }, []);
 
@@ -24,7 +48,7 @@ export default function Comments({ postId }) {
     const newComment = {
       postId: postId,
       content: commentInput,
-      contactId: 7,
+      contactId: currentUser.contactId,
     };
 
     await fetch(
@@ -39,28 +63,47 @@ export default function Comments({ postId }) {
     )
       .then((res) => res.json())
       .then((data) => {
-        comments.push(data);
-        setComments(comments);
-        console.log(comments);
+        setComments([...comments, data]);
+        setFilteredComments([...comments, data])
       });
   };
   return (
     <div className="commentsBody">
       <div className="commentHeader">
-        <p>See previous comments</p>
+      {comments.length > 3 ? (
+            <div>
+              <Button onClick={filterComment}><p>Show previous comments</p></Button>
+            </div>
+          ) : (
+            <></>
+          )}
       </div>
       <div className="comments">
-        {comments.map((comment) => (
-          <Comment
-            key={comment.id}
-            comment={comment}
-            setComments={setComments}
-          />
-        ))}
+        {filteredComments.length > 0 ? (
+          filteredComments.map((comment) => (
+            <Comment
+              key={comment.id}
+              comment={comment}
+              setComments={setComments}
+            />
+          ))
+        ) : (
+          <div className="noComments">
+            <p>No comments yet</p>
+          </div>
+        )}
+        <div className="showMoreButton">
+          
+        </div>
       </div>
       <div className="addCommentSection">
         <div className="commentProfileIcon">
-          <ProfileIcon letters={"LW"} />
+          <ProfileIcon
+            letters={
+              currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0)
+            }
+            setFavouriteColour={currentUser.favouriteColour}
+          />
         </div>
         <InputField
           label={"Add a comment"}

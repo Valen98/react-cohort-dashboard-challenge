@@ -2,28 +2,50 @@ import { useContext, useEffect, useState } from "react";
 import InputField from "../../inputFields/InputFields";
 import ProfileIcon from "../../profileIcon/ProfileIcon";
 import Comments from "../comments/comments";
-import { UserContext } from "../../../App";
-import { Link } from "react-router-dom";
+import { PostContext, UserContext } from "../../../App";
+import { useParams } from "react-router-dom";
 
-export default function PostItem({ post }) {
+export default function SinglePost({posts}) {
   const userContext = useContext(UserContext);
+  const [user, setUser] = useState({});
+  const [post, setPost] = useState({});
   const [firstname, setFirstname] = useState("");
   const [lastName, setLastName] = useState("");
   const [favouriteColour, setFavouriteColour] = useState("");
 
-  const fetchUser = async () => {
-    const user = await userContext.users.find((u) => u.id === post.contactId);
-    
-    setFirstname(user.firstName);
-    setLastName(user.lastName);
-    setFavouriteColour(user.favouriteColour);
+  const { id } = useParams();
+
+  const fetchPost = async () => {
+    const targetPost = posts.find((p) => p.id === parseInt(id))
+    console.log(targetPost)
+    console.log(targetPost.contactId)
+    setPost(targetPost)
+    fetchUser(targetPost.contactId)
+    console.log(posts)
   };
 
-  useEffect(() => async function() {
-    await fetchUser();
-  }, []);
+  const fetchUser = async (id) => {
+      await fetch(
+        `https://boolean-uk-api-server.fly.dev/valen98/contact/${id}`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data);
+          setFirstname(data.firstName);
+          setLastName(data.lastName);
+          setFavouriteColour(data.favouriteColour);
+        });
+    
+  };
 
-  
+  useEffect(
+    () =>
+      async function () {
+        await fetchPost()
+        console.log(post)
+      },
+    []
+  );
 
   return (
     <div className="postItemParent">
@@ -41,7 +63,8 @@ export default function PostItem({ post }) {
             </h2>
           </div>
           <div className="title">
-            <Link to={`/view/${post.id}`}> {post.title} </Link>
+            {        console.log(post.contactId)}
+            <h3>{post.title}</h3>
           </div>
         </div>
       </div>

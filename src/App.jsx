@@ -4,12 +4,14 @@ import { Route, Routes } from "react-router-dom";
 import LeftMenu from "./components/leftMenu/leftMenu";
 import Header from "./components/header/header";
 import PostBody from "./components/posts/index";
+import SinglePost from "./components/posts/Post/SinglePost";
 const PostContext = createContext();
 const UserContext = createContext();
 
 function App() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([{}]);
   const [users, setUsers] = useState([{ firstName: "", lastName: "" }]);
+  const currentUser = {firstName: "Leo", lastName: "Wahlandt", favouriteColour: "#2b8ced", contactId: 16}
 
   useEffect(() => {
     fetch("https://boolean-uk-api-server.fly.dev/valen98/post")
@@ -25,18 +27,16 @@ function App() {
       });
   }, []);
 
-  console.log(posts);
-
   return (
     <main>
-      <UserContext.Provider value={{ users, setUsers }}>
+      <UserContext.Provider value={{ users, setUsers, currentUser }}>
         <PostContext.Provider value={{ posts, setPosts }}>
           <Header />
           <div className="mainBody">
             <LeftMenu />
-
             <Routes>
               <Route path="/" element={<PostBody />} />
+              <Route path="/view/:id"  element={<SinglePost posts={posts} />}/>
             </Routes>
           </div>
         </PostContext.Provider>

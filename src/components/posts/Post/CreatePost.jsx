@@ -2,20 +2,21 @@ import ProfileIcon from "../../profileIcon/ProfileIcon";
 import "../style.scss";
 import InputField from "../../inputFields/InputFields";
 import { Button } from "@mui/material";
-import { useContext, useState } from "react";
-import { PostContext } from "../../../App";
+import { useContext, useEffect, useState } from "react";
+import { PostContext, UserContext } from "../../../App";
 
-export default function CreatePost({ posts, setPosts }) {
+export default function CreatePost({ currentUser }) {
   const postContext = useContext(PostContext);
-  const [input, setInput] = useState("");
+  const userContext = useContext(UserContext)
+  const [input, setInput] = useState("")
 
   const handleSubmit = async (e) => {
-    console.log("Wow");
+    console.log(currentUser);
     e.preventDefault();
     const newPost = {
       title: "My own posts",
       content: input,
-      contactId: 7,
+      contactId: currentUser.contactId,
     };
 
     await fetch("https://boolean-uk-api-server.fly.dev/valen98/post", {
@@ -27,8 +28,8 @@ export default function CreatePost({ posts, setPosts }) {
     })
       .then((res) => res.json())
       .then((data) => {
-        postContext.posts.push(data);
-        postContext.setPosts(postContext.posts);
+        console.log("inside create " + postContext.posts)
+        postContext.setPosts([...postContext.posts, data]);
         console.log(postContext.posts);
       });
   };
@@ -37,7 +38,10 @@ export default function CreatePost({ posts, setPosts }) {
     <div className="createPostParent">
       <div className="createPost">
         <div className="profileIconDiv">
-          <ProfileIcon letters={"LW"} />
+          <ProfileIcon
+            letters={currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0)}
+            setFavouriteColour={currentUser.favouriteColour}
+          />
         </div>
         <div className="actionDiv">
           <form onSubmit={handleSubmit} className="createPostForm">
