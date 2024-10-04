@@ -17,11 +17,8 @@ export default function SinglePost({posts}) {
 
   const fetchPost = async () => {
     const targetPost = posts.find((p) => p.id === parseInt(id))
-    console.log(targetPost)
-    console.log(targetPost.contactId)
     setPost(targetPost)
     fetchUser(targetPost.contactId)
-    console.log(posts)
   };
 
   const fetchUser = async (id) => {
@@ -35,14 +32,12 @@ export default function SinglePost({posts}) {
           setLastName(data.lastName);
           setFavouriteColour(data.favouriteColour);
         });
-    
   };
 
   useEffect(
     () =>
       async function () {
         await fetchPost()
-        console.log(post)
       },
     []
   );
@@ -63,7 +58,6 @@ export default function SinglePost({posts}) {
             </h2>
           </div>
           <div className="title">
-            {        console.log(post.contactId)}
             <h3>{post.title}</h3>
           </div>
         </div>
@@ -73,7 +67,7 @@ export default function SinglePost({posts}) {
       </div>
       <hr className="line" />
       <div className="commentSection">
-        <Comments postId={post.id} currentUser={userContext.currentUser} />
+        <Comments postId={id} currentUser={userContext.currentUser} />
       </div>
     </div>
   );

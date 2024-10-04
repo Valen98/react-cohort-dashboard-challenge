@@ -16,13 +16,11 @@ export default function Comments({ postId, currentUser }) {
         setFilteredComments(
           comments.slice(comments.length - 3, comments.length)
         );
-        console.log(filteredComments);
         setCheckFilter(!checkFilter);
       }
     } else {
       setFilteredComments([...comments]);
       setCheckFilter(!checkFilter);
-      console.log(filteredComments);
     }
   };
 
@@ -33,23 +31,23 @@ export default function Comments({ postId, currentUser }) {
       .then((res) => res.json())
       .then((data) => {
         setComments(data);
-        if(data.length > 3) {
+        if (data.length > 3) {
           setFilteredComments(data.slice(data.length - 3, data.length));
-        }else {
-          setFilteredComments(data)
+        } else {
+          setFilteredComments(data);
         }
-        
       });
   }, []);
 
   const handleSubmit = async (e) => {
-    console.log("Wow");
     e.preventDefault();
     const newComment = {
-      postId: postId,
+      postId: parseInt(postId),
       content: commentInput,
       contactId: currentUser.contactId,
     };
+
+    setCommentInput("")
 
     await fetch(
       `https://boolean-uk-api-server.fly.dev/valen98/post/${postId}/comment`,
@@ -64,19 +62,21 @@ export default function Comments({ postId, currentUser }) {
       .then((res) => res.json())
       .then((data) => {
         setComments([...comments, data]);
-        setFilteredComments([...comments, data])
+        setFilteredComments([...comments, data]);
       });
   };
   return (
     <div className="commentsBody">
       <div className="commentHeader">
-      {comments.length > 3 ? (
-            <div>
-              <Button onClick={filterComment}><p>Show previous comments</p></Button>
-            </div>
-          ) : (
-            <></>
-          )}
+        {comments.length > 3 ? (
+          <div>
+            <Button onClick={filterComment}>
+              <p>Show previous comments</p>
+            </Button>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="comments">
         {filteredComments.length > 0 ? (
@@ -92,9 +92,7 @@ export default function Comments({ postId, currentUser }) {
             <p>No comments yet</p>
           </div>
         )}
-        <div className="showMoreButton">
-          
-        </div>
+        <div className="showMoreButton"></div>
       </div>
       <div className="addCommentSection">
         <div className="commentProfileIcon">

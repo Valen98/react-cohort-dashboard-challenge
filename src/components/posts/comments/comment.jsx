@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import ProfileIcon from "../../profileIcon/ProfileIcon";
 import { UserContext } from "../../../App";
 
-export default function Comment({ comment, setComments }) {
+export default function Comment({ comment }) {
   const userContext = useContext(UserContext);
 
   const [user, setUser] = useState([]);
