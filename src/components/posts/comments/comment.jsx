@@ -2,15 +2,19 @@ import { useContext, useEffect, useState } from "react";
 import ProfileIcon from "../../profileIcon/ProfileIcon";
 import { UserContext } from "../../../App";
 
-export default function Comment({ comment }) {
-  const { user } = useContext(UserContext)
+export default function Comment({ comment, setComments }) {
+  const userContext = useContext(UserContext);
 
+  const [user, setUser] = useState([]);
   const [firstname, setFirstname] = useState("");
   const [lastName, setLastName] = useState("");
   const [favouriteColour, setFavouriteColour] = useState("");
 
   useEffect(() => {
-    setFirstname(user.find(p => p.id === comment.contactId))
+    const user = userContext.users.find((u) => u.id === comment.contactId);
+    setFirstname(user.firstName);
+    setLastName(user.lastName);
+    setFavouriteColour(user.favouriteColour);
   }, []);
 
   return (
@@ -24,7 +28,7 @@ export default function Comment({ comment }) {
       <div className="commentContent">
         <div className="commentName">
           <h4>
-            {firstname} {lastName}
+            {user.firstName} {user.lastName}
           </h4>
         </div>
         <div className="content">

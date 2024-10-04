@@ -9,7 +9,7 @@ const UserContext = createContext();
 
 function App() {
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([{ firstName: "", lastName: "" }]);
 
   useEffect(() => {
     fetch("https://boolean-uk-api-server.fly.dev/valen98/post")
@@ -17,8 +17,8 @@ function App() {
       .then((data) => {
         setPosts(data);
       });
-      
-    fetch("https://boolean-uk-api-server.fly.dev/valen98/contacts")
+
+    fetch("https://boolean-uk-api-server.fly.dev/valen98/contact")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data);
@@ -29,17 +29,18 @@ function App() {
 
   return (
     <main>
-      <Header />
-      <div className="mainBody">
-        <LeftMenu />
-        <UserContext.Provider value={{ users, setUsers }}>
-          <PostContext.Provider value={{ posts, setPosts }}>
+      <UserContext.Provider value={{ users, setUsers }}>
+        <PostContext.Provider value={{ posts, setPosts }}>
+          <Header />
+          <div className="mainBody">
+            <LeftMenu />
+
             <Routes>
               <Route path="/" element={<PostBody />} />
             </Routes>
-          </PostContext.Provider>
-        </UserContext.Provider>
-      </div>
+          </div>
+        </PostContext.Provider>
+      </UserContext.Provider>
     </main>
   );
 }
