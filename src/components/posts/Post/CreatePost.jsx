@@ -41,6 +41,7 @@ export default function CreatePost({ currentUser }) {
           <ProfileIcon
             letters={currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0)}
             setFavouriteColour={currentUser.favouriteColour}
+            id={16}
           />
         </div>
         <div className="actionDiv">

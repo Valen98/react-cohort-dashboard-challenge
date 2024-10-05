@@ -5,6 +5,7 @@ import LeftMenu from "./components/leftMenu/leftMenu";
 import Header from "./components/header/header";
 import PostBody from "./components/posts/index";
 import SinglePost from "./components/posts/Post/SinglePost";
+import ProfilePage from "./components/profile";
 const PostContext = createContext();
 const UserContext = createContext();
 
@@ -37,6 +38,7 @@ function App() {
             <Routes>
               <Route path="/" element={<PostBody />} />
               <Route path="/view/:id"  element={<SinglePost posts={posts} />}/>
+              <Route path="/profile/:id" element={<ProfilePage />} />
             </Routes>
           </div>
         </PostContext.Provider>

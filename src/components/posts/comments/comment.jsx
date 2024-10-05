@@ -9,12 +9,14 @@ export default function Comment({ comment }) {
   const [firstname, setFirstname] = useState("");
   const [lastName, setLastName] = useState("");
   const [favouriteColour, setFavouriteColour] = useState("");
+  const [userId, setUserId] = useState("")
 
   useEffect(() => {
     const user = userContext.users.find((u) => u.id === comment.contactId);
     setFirstname(user.firstName);
     setLastName(user.lastName);
     setFavouriteColour(user.favouriteColour);
+    setUserId(user.id)
   }, []);
 
   return (
@@ -23,6 +25,7 @@ export default function Comment({ comment }) {
         <ProfileIcon
           letters={firstname.charAt(0) + lastName.charAt(0)}
           setFavouriteColour={favouriteColour}
+          id={parseInt(userId)}
         />
       </div>
       <div className="commentContent">

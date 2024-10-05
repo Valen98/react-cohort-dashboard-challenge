@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import InputField from "../../inputFields/InputFields";
 import ProfileIcon from "../../profileIcon/ProfileIcon";
 import Comments from "../comments/comments";
 import { UserContext } from "../../../App";
@@ -10,6 +9,7 @@ export default function PostItem({ post }) {
   const [firstname, setFirstname] = useState("");
   const [lastName, setLastName] = useState("");
   const [favouriteColour, setFavouriteColour] = useState("");
+  const [userId, setUserId] = useState("")
 
   const fetchUser = async () => {
     const user = await userContext.users.find((u) => u.id === post.contactId);
@@ -17,6 +17,7 @@ export default function PostItem({ post }) {
     setFirstname(user.firstName);
     setLastName(user.lastName);
     setFavouriteColour(user.favouriteColour);
+    setUserId(user.id)
   };
 
   useEffect(() => async function() {
@@ -32,6 +33,7 @@ export default function PostItem({ post }) {
           <ProfileIcon
             letters={firstname.charAt(0) + lastName.charAt(0)}
             setFavouriteColour={favouriteColour}
+            id={parseInt(userId)}
           />
         </div>
         <div className="postName">
