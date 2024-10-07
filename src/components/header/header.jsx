@@ -8,15 +8,15 @@ export default function Header() {
   const userContext = useContext(UserContext);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [favouriteColour, setFavouriteColour] = useState("")
-  const [userId, setUserId] = useState("")
+  const [favouriteColour, setFavouriteColour] = useState("");
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     const user = userContext.currentUser;
     setFirstName(user.firstName);
     setLastName(user.lastName);
-    setFavouriteColour(user.favouriteColour)
-    setUserId(user.contactId)
+    setFavouriteColour(user.favouriteColour);
+    setUserId(user.contactId);
   });
 
   return (
@@ -25,7 +25,11 @@ export default function Header() {
         <img src={logo} alt="logo" className="logo" />
       </div>
       <div className="userDiv">
-        <UserIcon letters={firstName.charAt(0) + lastName.charAt(0)} setFavouriteColour={favouriteColour} id={parseInt(userId)}/>
+        <UserIcon
+          letters={firstName.charAt(0) + lastName.charAt(0)}
+          setFavouriteColour={favouriteColour}
+          id={parseInt(userId)}
+        />
       </div>
     </div>
   );

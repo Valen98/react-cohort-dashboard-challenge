@@ -6,27 +6,34 @@ import ProfileIcon from "../profileIcon/ProfileIcon";
 import InputField from "../inputFields/InputFields";
 
 export default function ProfilePage() {
-  const { users } = useContext(UserContext);
+  const { users, currentUser } = useContext(UserContext);
   const [firstName, setFirstname] = useState("");
   const [lastName, setLastName] = useState("");
   const [favouriteColour, setFavouriteColour] = useState("");
+  const [readOnly, setReadOnly] = useState(true);
+  const [user, setUser] = useState({});
 
   const { id } = useParams();
 
   const fetchUser = async () => {
-    const user = await users.find((u) => u.id === parseInt(id));
+    setUser(users.find((u) => u.id === parseInt(id)));
+    console.log(users)
+  };
+
+  useEffect(() => async function () {
+    await fetchUser();
+  }, []);
+
+  useEffect(() => {
     setFirstname(user.firstName);
     setLastName(user.lastName);
     setFavouriteColour(user.favouriteColour);
-  };
-
-  useEffect(
-    () =>
-      async function () {
-        await fetchUser();
-      },
-    []
-  );
+    if (currentUser.id === user.id) {
+      setReadOnly(false)
+    } else {
+      setReadOnly(true)
+    }
+  },[user])
 
   return (
     <div className="profilePageMain">
@@ -34,12 +41,20 @@ export default function ProfilePage() {
         <div className="banner">
           <div className="profileIcon">
             <ProfileIcon
-              letters={firstName.charAt(0) + lastName.charAt(0)}
+              letters={
+                (firstName
+                  ? firstName.charAt(0)
+                  : "?") + (lastName
+                  ? lastName.charAt(0)
+                  : "?")
+              }
               setFavouriteColour={favouriteColour}
             />
           </div>
           <div className="nameBanner">
-            <h1>Dummy Data</h1>
+            <h1>
+              {firstName} {lastName}
+            </h1>
           </div>
         </div>
         <div className="lines">
@@ -54,16 +69,18 @@ export default function ProfilePage() {
                 label={"First name"}
                 id={"firstName"}
                 name={"First Name"}
-                placeholder={"First Name"}
+                placeholder={firstName}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
               <InputField
                 label={"Last name"}
                 id={"lastName"}
                 name={"last Name"}
-                placeholder={"last Name"}
+                placeholder={lastName}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
               <InputField
@@ -72,14 +89,16 @@ export default function ProfilePage() {
                 name={"username"}
                 placeholder={"Username"}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
               <InputField
                 label={"email"}
                 id={"email"}
                 name={"email"}
-                placeholder={"Email"}
+                placeholder={user.email}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
             </div>
@@ -89,8 +108,9 @@ export default function ProfilePage() {
                 label={"street"}
                 id={"street"}
                 name={"street"}
-                placeholder={"street"}
+                placeholder={user.street}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
               <InputField
@@ -99,14 +119,16 @@ export default function ProfilePage() {
                 name={"suit"}
                 placeholder={"Suit"}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
               <InputField
                 label={"city"}
                 id={"city"}
                 name={"city"}
-                placeholder={"City"}
+                placeholder={user.city}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
               <InputField
@@ -115,6 +137,7 @@ export default function ProfilePage() {
                 name={"zipcode"}
                 placeholder={"Zipcode"}
                 type={"text"}
+                readOnly={readOnly}
                 onChange={(e) => console.log(e)}
               />
             </div>

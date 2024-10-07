@@ -12,6 +12,7 @@ const UserContext = createContext();
 function App() {
   const [posts, setPosts] = useState([{}]);
   const [users, setUsers] = useState([{ firstName: "", lastName: "" }]);
+  //This is just dummy data
   const currentUser = {firstName: "Leo", lastName: "Wahlandt", favouriteColour: "#2b8ced", contactId: 16}
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function App() {
         <PostContext.Provider value={{ posts, setPosts }}>
           <Header />
           <div className="mainBody">
-            <LeftMenu />
+            <LeftMenu id={currentUser.contactId}/>
             <Routes>
               <Route path="/" element={<PostBody />} />
               <Route path="/view/:id"  element={<SinglePost posts={posts} />}/>
